@@ -6,266 +6,130 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MarketDesk — Trading & Market Analysis</title>
 <script src="https://s3.tradingview.com/tv.js"></script>
-
 <style>
-:root {
---bg:#0b0e11;
---panel:#131820;
---panel2:#171e27;
---border:#252e39;
---text:#e8edf3;
---muted:#8492a6;
---green:#16c784;
---red:#ea3943;
---gold:#f0b90b;
-}
+:root{--bg:#0b0e11;--panel:#131820;--panel2:#171e27;--border:#252e39;--text:#e8edf3;--muted:#8492a6;--green:#16c784;--red:#ea3943;--gold:#f0b90b}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 button,input{font:inherit}
-header{
-height:68px;padding:0 22px;display:flex;
-align-items:center;justify-content:space-between;
-border-bottom:1px solid var(--border);
-background:#10151c;position:sticky;top:0;z-index:10
-}
-.logo{font-size:23px;font-weight:800}
-.logo span{color:var(--gold)}
-.nav{display:flex;gap:24px}
-.nav a{color:var(--muted);text-decoration:none;font-size:13px}
+header{height:68px;padding:0 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#10151c;position:sticky;top:0;z-index:10}
+.logo{font-size:23px;font-weight:800}.logo span{color:var(--gold)}
+.nav{display:flex;gap:24px}.nav a{color:var(--muted);text-decoration:none;font-size:13px}
 .header-right{display:flex;align-items:center;gap:12px}
 .status{font-size:11px;color:var(--green)}
 .login{background:var(--gold);color:#111;border:0;padding:10px 16px;border-radius:5px;font-weight:bold;cursor:pointer}
 .container{max-width:1500px;margin:auto;padding:20px}
 .welcome{display:flex;justify-content:space-between;margin-bottom:20px}
-.welcome h1{font-size:25px}
-.welcome p{font-size:13px;color:var(--muted);margin-top:7px}
-.market-section,.chart-panel,.watch-panel,.feature{
-background:var(--panel);border:1px solid var(--border);border-radius:8px;
-}
+.welcome h1{font-size:25px}.welcome p{font-size:13px;color:var(--muted);margin-top:7px}
+.market-section,.chart-panel,.watch-panel,.feature,.portfolio-panel{background:var(--panel);border:1px solid var(--border);border-radius:8px}
 .market-section{padding:15px;margin-bottom:18px}
 .market-section-head{display:flex;justify-content:space-between;margin-bottom:12px}
-.market-section-head h2{font-size:16px}
-.market-section-head span{font-size:11px;color:var(--muted)}
+.market-section-head h2{font-size:16px}.market-section-head span{font-size:11px;color:var(--muted)}
 .market-widget{width:100%;min-height:420px}
 .workspace{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:14px}
 .chart-panel,.watch-panel{overflow:hidden}
 .chart-head{padding:14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.symbol{font-size:17px;font-weight:bold}
-.symbol span{color:var(--muted);font-size:12px;font-weight:normal}
+.symbol{font-size:17px;font-weight:bold}.symbol span{color:var(--muted);font-size:12px;font-weight:normal}
 .chart-tools{display:flex;gap:5px;flex-wrap:wrap}
-.chart-tools button,.search-button{
-border:1px solid var(--border);background:var(--panel2);
-color:var(--text);padding:8px 10px;border-radius:4px;cursor:pointer;font-size:12px
-}
-.chart-tools button.active,.chart-tools button:hover{
-background:var(--gold);color:#111;border-color:var(--gold)
-}
-.chart-box{height:520px;width:100%}
-#tradingview_chart{height:100%;width:100%}
-
-/* Live ticker */
-.ticker-grid{
-display:grid;
-grid-template-columns:repeat(4,minmax(0,1fr));
-gap:10px;
-padding:14px;
-border-bottom:1px solid var(--border);
-}
-.ticker-card{
-background:var(--panel2);
-border:1px solid var(--border);
-border-radius:6px;
-padding:13px;
-min-width:0;
-}
-.ticker-card small{
-display:block;
-font-size:11px;
-color:var(--muted);
-margin-bottom:9px;
-}
-.ticker-card strong{
-display:block;
-font-size:17px;
-overflow-wrap:anywhere;
-}
-.ticker-card .positive{color:var(--green)}
-.ticker-card .negative{color:var(--red)}
-.ticker-status{
-padding:0 14px 12px;
-font-size:11px;
-color:var(--muted);
-}
+.chart-tools button,.search-button{border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:8px 10px;border-radius:4px;cursor:pointer;font-size:12px}
+.chart-tools button.active,.chart-tools button:hover{background:var(--gold);color:#111;border-color:var(--gold)}
+.chart-box{height:520px;width:100%}#tradingview_chart{height:100%;width:100%}
+.ticker-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px;border-bottom:1px solid var(--border)}
+.ticker-card{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:13px;min-width:0}
+.ticker-card small{display:block;font-size:11px;color:var(--muted);margin-bottom:9px}
+.ticker-card strong{display:block;font-size:17px;overflow-wrap:anywhere}
+.ticker-card .positive{color:var(--green)}.ticker-card .negative{color:var(--red)}
+.ticker-status{padding:0 14px 12px;font-size:11px;color:var(--muted)}
 .watch-head{padding:17px;border-bottom:1px solid var(--border);font-weight:bold}
 .search-wrap{padding:12px}
-.search-wrap input{
-width:100%;padding:11px;background:var(--bg);
-border:1px solid var(--border);border-radius:5px;color:white
-}
-.watch-item{
-display:flex;justify-content:space-between;align-items:center;
-padding:13px 15px;border-bottom:1px solid var(--border);cursor:pointer
-}
+.search-wrap input{width:100%;padding:11px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:white}
+.watch-item{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border-bottom:1px solid var(--border);cursor:pointer}
 .watch-item:hover{background:var(--panel2)}
-.watch-item strong{font-size:13px}
-.watch-item small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.watch-item strong{font-size:13px}.watch-item small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
 .watch-note{padding:13px;color:var(--muted);font-size:11px;line-height:1.6}
 .section-title{margin:27px 0 13px;font-size:17px}
 .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.feature{padding:19px}
-.feature .icon{font-size:23px;margin-bottom:12px}
+.feature{padding:19px}.feature .icon{font-size:23px;margin-bottom:12px}
 .feature h3{font-size:14px;margin-bottom:8px}
 .feature p{font-size:12px;line-height:1.6;color:var(--muted)}
-.indicator-note{
-margin-top:12px;padding:12px;background:var(--panel2);
-border:1px solid var(--border);border-radius:6px;
-font-size:11px;color:var(--muted);line-height:1.6
-}
+.indicator-note{margin-top:12px;padding:12px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.6}
+
+/* Portfolio tracker */
+.portfolio-panel{margin-top:22px;overflow:hidden}
+.portfolio-heading{padding:17px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.portfolio-heading h2{font-size:17px}
+.portfolio-heading p{font-size:11px;color:var(--muted);margin-top:5px}
+.portfolio-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:9px;padding:14px}
+.portfolio-form label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
+.portfolio-form input{width:100%;min-width:0;padding:11px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text)}
+.portfolio-form button,.remove-asset{border:0;border-radius:5px;background:var(--gold);color:#111;font-weight:bold;padding:11px 15px;cursor:pointer;align-self:end}
+.portfolio-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 14px 14px}
+.portfolio-stat{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:13px;min-width:0}
+.portfolio-stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}
+.portfolio-stat strong{font-size:17px;overflow-wrap:anywhere}
+.profit-positive{color:var(--green)}.profit-negative{color:var(--red)}
+.portfolio-table-wrap{overflow-x:auto}
+.portfolio-table{width:100%;border-collapse:collapse;min-width:650px}
+.portfolio-table th,.portfolio-table td{padding:12px 14px;text-align:left;border-top:1px solid var(--border);font-size:12px;white-space:nowrap}
+.portfolio-table th{color:var(--muted);font-weight:normal}
+.portfolio-empty{padding:22px 14px;color:var(--muted);font-size:12px;text-align:center}
+.remove-asset{background:transparent;color:var(--red);border:1px solid var(--border);padding:6px 9px}
+.portfolio-footnote{padding:12px 14px;color:var(--muted);font-size:11px;line-height:1.6;border-top:1px solid var(--border)}
 footer{border-top:1px solid var(--border);padding:22px;text-align:center;color:var(--muted);font-size:11px;margin-top:35px}
-@media(max-width:850px){
-.workspace{grid-template-columns:1fr}
-.nav{display:none}
-.chart-box{height:430px}
-}
-@media(max-width:600px){
-.ticker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(max-width:480px){
-header{padding:0 13px}
-.container{padding:12px}
-.welcome h1{font-size:20px}
-.chart-box{height:380px}
-.feature-grid{grid-template-columns:1fr}
-.market-widget{min-height:460px}
-.ticker-card strong{font-size:15px}
-}
+@media(max-width:850px){.workspace{grid-template-columns:1fr}.nav{display:none}.chart-box{height:430px}}
+@media(max-width:700px){.portfolio-form{grid-template-columns:repeat(2,minmax(0,1fr))}.portfolio-form button{grid-column:1/-1}.portfolio-summary{grid-template-columns:1fr}}
+@media(max-width:600px){.ticker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){header{padding:0 13px}.container{padding:12px}.welcome h1{font-size:20px}.chart-box{height:380px}.feature-grid{grid-template-columns:1fr}.market-widget{min-height:460px}.ticker-card strong{font-size:15px}}
 </style>
 </head>
-
 <body>
 <header>
 <div class="logo">Market<span>Desk</span></div>
 <nav class="nav">
-<a href="#markets">Markets</a>
-<a href="#chart">Charts</a>
-<a href="#watchlist">Watchlist</a>
-<a href="#tools">Tools</a>
+<a href="#markets">Markets</a><a href="#chart">Charts</a><a href="#watchlist">Watchlist</a><a href="#portfolio">Portfolio</a><a href="#tools">Tools</a>
 </nav>
-<div class="header-right">
-<span class="status">● Markets platform</span>
-<button class="login" onclick="document.getElementById('chart').scrollIntoView({behavior:'smooth'})">Open Charts</button>
-</div>
+<div class="header-right"><span class="status">● Markets platform</span><button class="login" onclick="document.getElementById('chart').scrollIntoView({behavior:'smooth'})">Open Charts</button></div>
 </header>
 
 <main class="container">
-
-<section class="welcome">
-<div>
-<h1>Market Overview</h1>
-<p>Explore financial markets, analyze charts and follow your favorite assets.</p>
-</div>
-</section>
+<section class="welcome"><div><h1>Market Overview</h1><p>Explore financial markets, analyze charts and follow your favorite assets.</p></div></section>
 
 <section class="market-section" id="markets">
-<div class="market-section-head">
-<h2>Global Markets</h2>
-<span>Market data by TradingView</span>
-</div>
+<div class="market-section-head"><h2>Global Markets</h2><span>Market data by TradingView</span></div>
 <div class="market-widget">
 <div class="tradingview-widget-container" style="height:100%;width:100%">
 <div class="tradingview-widget-container__widget"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
 {
-"colorTheme":"dark",
-"dateRange":"1D",
-"showChart":true,
-"locale":"en",
-"isTransparent":true,
-"showFloatingTooltip":false,
-"width":"100%",
-"height":"420",
+"colorTheme":"dark","dateRange":"1D","showChart":true,"locale":"en","isTransparent":true,"showFloatingTooltip":false,"width":"100%","height":"420",
 "tabs":[
-{"title":"Crypto","symbols":[
-{"s":"BINANCE:BTCUSDT","d":"Bitcoin"},
-{"s":"BINANCE:ETHUSDT","d":"Ethereum"},
-{"s":"BINANCE:BNBUSDT","d":"BNB"},
-{"s":"BINANCE:SOLUSDT","d":"Solana"}
-]},
-{"title":"Indices","symbols":[
-{"s":"FOREXCOM:SPXUSD","d":"S&P 500"},
-{"s":"NASDAQ:NDX","d":"Nasdaq 100"},
-{"s":"INDEX:DJI","d":"Dow Jones"}
-]},
-{"title":"Forex","symbols":[
-{"s":"FX:EURUSD","d":"EUR/USD"},
-{"s":"FX:GBPUSD","d":"GBP/USD"},
-{"s":"FX:USDJPY","d":"USD/JPY"}
-]},
-{"title":"Commodities","symbols":[
-{"s":"OANDA:XAUUSD","d":"Gold"},
-{"s":"OANDA:XAGUSD","d":"Silver"},
-{"s":"NYMEX:CL1!","d":"Crude Oil"}
-]}
+{"title":"Crypto","symbols":[{"s":"BINANCE:BTCUSDT","d":"Bitcoin"},{"s":"BINANCE:ETHUSDT","d":"Ethereum"},{"s":"BINANCE:BNBUSDT","d":"BNB"},{"s":"BINANCE:SOLUSDT","d":"Solana"}]},
+{"title":"Indices","symbols":[{"s":"FOREXCOM:SPXUSD","d":"S&P 500"},{"s":"NASDAQ:NDX","d":"Nasdaq 100"},{"s":"INDEX:DJI","d":"Dow Jones"}]},
+{"title":"Forex","symbols":[{"s":"FX:EURUSD","d":"EUR/USD"},{"s":"FX:GBPUSD","d":"GBP/USD"},{"s":"FX:USDJPY","d":"USD/JPY"}]},
+{"title":"Commodities","symbols":[{"s":"OANDA:XAUUSD","d":"Gold"},{"s":"OANDA:XAGUSD","d":"Silver"},{"s":"NYMEX:CL1!","d":"Crude Oil"}]}
 ],
-"support_host":"https://www.tradingview.com",
-"backgroundColor":"#131820",
-"gridLineColor":"rgba(255,255,255,0.05)",
-"fontColor":"#d1d4dc",
-"trendLineColor":"#f0b90b",
-"scaleFontColor":"#8492a6"
+"support_host":"https://www.tradingview.com","backgroundColor":"#131820","gridLineColor":"rgba(255,255,255,0.05)","fontColor":"#d1d4dc","trendLineColor":"#f0b90b","scaleFontColor":"#8492a6"
 }
 </script>
-</div>
-</div>
+</div></div>
 </section>
 
 <section class="workspace" id="chart">
-
 <div class="chart-panel">
 <div class="chart-head">
-<div class="symbol" id="selected-symbol">
-BTCUSDT <span>Bitcoin / USDT</span>
-</div>
+<div class="symbol" id="selected-symbol">BTCUSDT <span>Bitcoin / USDT</span></div>
 <div class="chart-tools">
-<button onclick="setTimeframe('1')">1m</button>
-<button onclick="setTimeframe('5')">5m</button>
-<button onclick="setTimeframe('15')">15m</button>
-<button onclick="setTimeframe('60')">1H</button>
-<button class="active" onclick="setTimeframe('240')">4H</button>
-<button onclick="setTimeframe('D')">1D</button>
-<button onclick="setTimeframe('W')">1W</button>
+<button onclick="setTimeframe('1')">1m</button><button onclick="setTimeframe('5')">5m</button><button onclick="setTimeframe('15')">15m</button><button onclick="setTimeframe('60')">1H</button><button class="active" onclick="setTimeframe('240')">4H</button><button onclick="setTimeframe('D')">1D</button><button onclick="setTimeframe('W')">1W</button>
 </div>
 </div>
-
-<!-- Live price information -->
 <div class="ticker-grid">
-<div class="ticker-card">
-<small>Live Price</small>
-<strong id="live-price">Loading...</strong>
-</div>
-<div class="ticker-card">
-<small>24H Change</small>
-<strong id="live-change">--</strong>
-</div>
-<div class="ticker-card">
-<small>24H High / Low</small>
-<strong id="live-highlow">-- / --</strong>
-</div>
-<div class="ticker-card">
-<small>24H Volume</small>
-<strong id="live-volume">--</strong>
-</div>
+<div class="ticker-card"><small>Live Price</small><strong id="live-price">Loading...</strong></div>
+<div class="ticker-card"><small>24H Change</small><strong id="live-change">--</strong></div>
+<div class="ticker-card"><small>24H High / Low</small><strong id="live-highlow">-- / --</strong></div>
+<div class="ticker-card"><small>24H Volume</small><strong id="live-volume">--</strong></div>
 </div>
 <div class="ticker-status" id="ticker-status">Connecting to live market data...</div>
-
-<div class="chart-box">
-<div id="tradingview_chart"></div>
-</div>
-
-<div class="indicator-note">
-<strong>Technical indicators:</strong>
-RSI, MACD, Moving Average and Bollinger Bands.
-</div>
+<div class="chart-box"><div id="tradingview_chart"></div></div>
+<div class="indicator-note"><strong>Technical indicators:</strong> RSI, MACD, Moving Average and Bollinger Bands.</div>
 </div>
 
 <aside class="watch-panel" id="watchlist">
@@ -274,64 +138,55 @@ RSI, MACD, Moving Average and Bollinger Bands.
 <input id="symbol-search" placeholder="Search symbol e.g. ETHUSDT" onkeydown="if(event.key==='Enter')searchSymbol()">
 <button class="search-button" style="width:100%;margin-top:8px" onclick="searchSymbol()">Search Market</button>
 </div>
-
-<div class="watch-item" onclick="loadSymbol('BINANCE:BTCUSDT','BTCUSDT','Bitcoin / USDT')">
-<div><strong>BTCUSDT</strong><small>Bitcoin</small></div>
-<strong>Open chart</strong>
-</div>
-<div class="watch-item" onclick="loadSymbol('BINANCE:ETHUSDT','ETHUSDT','Ethereum / USDT')">
-<div><strong>ETHUSDT</strong><small>Ethereum</small></div>
-<strong>Open chart</strong>
-</div>
-<div class="watch-item" onclick="loadSymbol('NASDAQ:AAPL','AAPL','Apple Inc.')">
-<div><strong>AAPL</strong><small>Apple</small></div>
-<strong>Open chart</strong>
-</div>
-<div class="watch-item" onclick="loadSymbol('NASDAQ:TSLA','TSLA','Tesla Inc.')">
-<div><strong>TSLA</strong><small>Tesla</small></div>
-<strong>Open chart</strong>
-</div>
-<div class="watch-item" onclick="loadSymbol('OANDA:XAUUSD','XAUUSD','Gold / U.S. Dollar')">
-<div><strong>XAUUSD</strong><small>Gold</small></div>
-<strong>Open chart</strong>
-</div>
-<div class="watch-item" onclick="loadSymbol('FX:EURUSD','EURUSD','Euro / U.S. Dollar')">
-<div><strong>EURUSD</strong><small>Euro / U.S. Dollar</small></div>
-<strong>Open chart</strong>
-</div>
-<div class="watch-note">
-Charts and market information are supplied by third parties. Data availability and delays depend on the market and exchange.
-</div>
+<div class="watch-item" onclick="loadSymbol('BINANCE:BTCUSDT','BTCUSDT','Bitcoin / USDT')"><div><strong>BTCUSDT</strong><small>Bitcoin</small></div><strong>Open chart</strong></div>
+<div class="watch-item" onclick="loadSymbol('BINANCE:ETHUSDT','ETHUSDT','Ethereum / USDT')"><div><strong>ETHUSDT</strong><small>Ethereum</small></div><strong>Open chart</strong></div>
+<div class="watch-item" onclick="loadSymbol('NASDAQ:AAPL','AAPL','Apple Inc.')"><div><strong>AAPL</strong><small>Apple</small></div><strong>Open chart</strong></div>
+<div class="watch-item" onclick="loadSymbol('NASDAQ:TSLA','TSLA','Tesla Inc.')"><div><strong>TSLA</strong><small>Tesla</small></div><strong>Open chart</strong></div>
+<div class="watch-item" onclick="loadSymbol('OANDA:XAUUSD','XAUUSD','Gold / U.S. Dollar')"><div><strong>XAUUSD</strong><small>Gold</small></div><strong>Open chart</strong></div>
+<div class="watch-item" onclick="loadSymbol('FX:EURUSD','EURUSD','Euro / U.S. Dollar')"><div><strong>EURUSD</strong><small>Euro / U.S. Dollar</small></div><strong>Open chart</strong></div>
+<div class="watch-note">Charts and market information are supplied by third parties. Data availability and delays depend on the market and exchange.</div>
 </aside>
 </section>
 
-<h2 class="section-title" id="tools">Explore MarketDesk</h2>
+<section class="portfolio-panel" id="portfolio">
+<div class="portfolio-heading">
+<div><h2>My Portfolio</h2><p>Track your holdings, current value and profit or loss</p></div>
+<span class="status">● Saved in this browser</span>
+</div>
 
-<section class="feature-grid">
-<div class="feature">
-<div class="icon">📊</div>
-<h3>Advanced Charts</h3>
-<p>Study price movements using interactive charts and multiple timeframes.</p>
+<form class="portfolio-form" id="portfolio-form">
+<div><label for="asset-symbol">Binance asset pair</label><input id="asset-symbol" placeholder="BTCUSDT" required maxlength="20"></div>
+<div><label for="asset-quantity">Quantity owned</label><input id="asset-quantity" type="number" min="0.00000001" step="any" placeholder="0.01" required></div>
+<div><label for="asset-buy-price">Average buy price (USDT)</label><input id="asset-buy-price" type="number" min="0.00000001" step="any" placeholder="65000" required></div>
+<div><label for="asset-note">Asset note (optional)</label><input id="asset-note" maxlength="40" placeholder="Long-term holding"></div>
+<button type="submit">Add Asset</button>
+</form>
+
+<div class="portfolio-summary">
+<div class="portfolio-stat"><small>Total Portfolio Value (USDT)</small><strong id="portfolio-value">0.00</strong></div>
+<div class="portfolio-stat"><small>Total Cost (USDT)</small><strong id="portfolio-cost">0.00</strong></div>
+<div class="portfolio-stat"><small>Total Profit / Loss (USDT)</small><strong id="portfolio-profit">0.00</strong></div>
 </div>
-<div class="feature">
-<div class="icon">⭐</div>
-<h3>Market Watchlist</h3>
-<p>Quickly switch between cryptocurrencies, stocks and currency pairs.</p>
+
+<div class="portfolio-table-wrap">
+<table class="portfolio-table">
+<thead><tr><th>Asset</th><th>Quantity</th><th>Buy price</th><th>Live price</th><th>Value</th><th>Profit / Loss</th><th>Action</th></tr></thead>
+<tbody id="portfolio-rows"></tbody>
+</table>
+<div class="portfolio-empty" id="portfolio-empty">No assets added yet. Add your first Binance spot holding above.</div>
 </div>
-<div class="feature">
-<div class="icon">🔎</div>
-<h3>Market Research</h3>
-<p>Follow financial instruments and explore potential market opportunities.</p>
-</div>
+<div class="portfolio-footnote" id="portfolio-status">Prices refresh automatically when market data is available. Your portfolio is stored only in this browser on this device.</div>
 </section>
 
+<h2 class="section-title" id="tools">Explore MarketDesk</h2>
+<section class="feature-grid">
+<div class="feature"><div class="icon">📊</div><h3>Advanced Charts</h3><p>Study price movements using interactive charts and multiple timeframes.</p></div>
+<div class="feature"><div class="icon">⭐</div><h3>Market Watchlist</h3><p>Quickly switch between cryptocurrencies, stocks and currency pairs.</p></div>
+<div class="feature"><div class="icon">🔎</div><h3>Market Research</h3><p>Follow financial instruments and explore potential market opportunities.</p></div>
+</section>
 </main>
 
-<footer>
-© 2026 MarketDesk. Independent market analysis platform.
-<br><br>
-Market data is provided by third parties. Nothing on this website is financial advice.
-</footer>
+<footer>© 2026 MarketDesk. Independent market analysis platform.<br><br>Market data is provided by third parties. Nothing on this website is financial advice.</footer>
 
 <script>
 let currentSymbol="BINANCE:BTCUSDT";
@@ -340,28 +195,12 @@ let tickerSocket=null;
 
 function createChart(symbol){
 document.getElementById("tradingview_chart").innerHTML="";
-
 new TradingView.widget({
-autosize:true,
-symbol:symbol,
-interval:currentTimeframe,
-timezone:"Etc/UTC",
-theme:"dark",
-style:"1",
-locale:"en",
-enable_publishing:false,
-allow_symbol_change:true,
-hide_side_toolbar:false,
-hide_top_toolbar:false,
-hide_legend:false,
-withdateranges:true,
-details:true,
-hotlist:false,
-calendar:false,
-
+autosize:true,symbol:symbol,interval:currentTimeframe,timezone:"Etc/UTC",theme:"dark",style:"1",locale:"en",
+enable_publishing:false,allow_symbol_change:true,hide_side_toolbar:false,hide_top_toolbar:false,hide_legend:false,
+withdateranges:true,details:true,hotlist:false,calendar:false,
 overrides:{
-"paneProperties.background":"#131820",
-"paneProperties.backgroundType":"solid",
+"paneProperties.background":"#131820","paneProperties.backgroundType":"solid",
 "paneProperties.vertGridProperties.color":"rgba(255,255,255,0.04)",
 "paneProperties.horzGridProperties.color":"rgba(255,255,255,0.04)",
 "scalesProperties.textColor":"#8492a6",
@@ -372,42 +211,23 @@ overrides:{
 "mainSeriesProperties.candleStyle.borderUpColor":"#16c784",
 "mainSeriesProperties.candleStyle.borderDownColor":"#ea3943"
 },
-
-studies:[
-"STD;RSI",
-"STD;MACD",
-"STD;MA",
-"STD;BB"
-],
-
+studies:["STD;RSI","STD;MACD","STD;MA","STD;BB"],
 container_id:"tradingview_chart"
 });
 }
 
 function formatPrice(value){
-return Number(value).toLocaleString("en-US",{
-minimumFractionDigits:2,
-maximumFractionDigits:8
-});
+return Number(value).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:8});
 }
-
 function formatVolume(value){
-return Number(value).toLocaleString("en-US",{
-maximumFractionDigits:2
-});
+return Number(value).toLocaleString("en-US",{maximumFractionDigits:2});
 }
 
 function connectLiveTicker(symbol){
-
-if(tickerSocket){
-tickerSocket.close();
-tickerSocket=null;
-}
-
+if(tickerSocket){tickerSocket.close();tickerSocket=null;}
 const status=document.getElementById("ticker-status");
 const pair=symbol.split(":");
-
-if(pair.length!==2 || pair[0]!=="BINANCE"){
+if(pair.length!==2||pair[0]!=="BINANCE"){
 document.getElementById("live-price").textContent="Unavailable";
 document.getElementById("live-change").textContent="--";
 document.getElementById("live-highlow").textContent="-- / --";
@@ -415,120 +235,182 @@ document.getElementById("live-volume").textContent="--";
 status.textContent="Live ticker currently supports Binance spot pairs. TradingView chart remains available.";
 return;
 }
-
 const market=pair[1].toLowerCase();
-
 status.textContent="Connecting to Binance live market data...";
-
-const socket=new WebSocket(
-"wss://stream.binance.com:9443/ws/"+market+"@ticker"
-);
-
+const socket=new WebSocket("wss://stream.binance.com:9443/ws/"+market+"@ticker");
 tickerSocket=socket;
-
 socket.onopen=function(){
-if(tickerSocket===socket){
-status.textContent="● Live Binance market data connected";
-status.style.color="#16c784";
-}
+if(tickerSocket===socket){status.textContent="● Live Binance market data connected";status.style.color="#16c784";}
 };
-
 socket.onmessage=function(event){
 if(tickerSocket!==socket)return;
-
 const data=JSON.parse(event.data);
-
-const price=Number(data.c);
-const change=Number(data.P);
-const high=Number(data.h);
-const low=Number(data.l);
-const volume=Number(data.v);
-
-document.getElementById("live-price").textContent=
-formatPrice(price);
-
+document.getElementById("live-price").textContent=formatPrice(Number(data.c));
 const changeElement=document.getElementById("live-change");
-
-changeElement.textContent=
-(change>=0?"+":"")+change.toFixed(2)+"%";
-
+const change=Number(data.P);
+changeElement.textContent=(change>=0?"+":"")+change.toFixed(2)+"%";
 changeElement.className=change>=0?"positive":"negative";
-
-document.getElementById("live-highlow").textContent=
-formatPrice(high)+" / "+formatPrice(low);
-
-document.getElementById("live-volume").textContent=
-formatVolume(volume);
+document.getElementById("live-highlow").textContent=formatPrice(Number(data.h))+" / "+formatPrice(Number(data.l));
+document.getElementById("live-volume").textContent=formatVolume(Number(data.v));
 };
-
 socket.onerror=function(){
-if(tickerSocket===socket){
-status.textContent="Live connection error. Check your connection.";
-status.style.color="#ea3943";
-}
+if(tickerSocket===socket){status.textContent="Live connection error. Check your connection.";status.style.color="#ea3943";}
 };
-
 socket.onclose=function(){
-if(tickerSocket===socket){
-status.textContent="Live connection closed. Reopen the market to reconnect.";
-status.style.color="#8492a6";
-}
+if(tickerSocket===socket){status.textContent="Live connection closed. Reopen the market to reconnect.";status.style.color="#8492a6";}
 };
 }
 
 function loadSymbol(symbol,name,description){
 currentSymbol=symbol;
-
-document.getElementById("selected-symbol").innerHTML=
-name+" <span>"+description+"</span>";
-
+document.getElementById("selected-symbol").innerHTML=name+" <span>"+description+"</span>";
 createChart(symbol);
 connectLiveTicker(symbol);
-
-document.getElementById("chart").scrollIntoView({
-behavior:"smooth"
-});
+document.getElementById("chart").scrollIntoView({behavior:"smooth"});
 }
-
 function setTimeframe(timeframe){
 currentTimeframe=timeframe;
-
 document.querySelectorAll(".chart-tools button").forEach(button=>{
 button.classList.remove("active");
-
-const labels={
-"1":"1m",
-"5":"5m",
-"15":"15m",
-"60":"1H",
-"240":"4H",
-"D":"1D",
-"W":"1W"
-};
-
-if(button.textContent===labels[timeframe]){
-button.classList.add("active");
-}
+const labels={"1":"1m","5":"5m","15":"15m","60":"1H","240":"4H","D":"1D","W":"1W"};
+if(button.textContent===labels[timeframe])button.classList.add("active");
 });
-
 createChart(currentSymbol);
 }
-
 function searchSymbol(){
 const value=document.getElementById("symbol-search").value.trim().toUpperCase();
-
 if(!value)return;
-
 const symbol=value.includes(":")?value:"BINANCE:"+value;
-
 loadSymbol(symbol,value,"Selected market");
+}
+
+/* Portfolio storage and calculations */
+const portfolioStorageKey="marketdesk_portfolio_v1";
+let portfolioAssets=loadPortfolio();
+
+function loadPortfolio(){
+try{
+const saved=JSON.parse(localStorage.getItem(portfolioStorageKey)||"[]");
+return Array.isArray(saved)?saved:[];
+}catch(error){return [];}
+}
+function savePortfolio(){
+try{
+localStorage.setItem(portfolioStorageKey,JSON.stringify(portfolioAssets));
+}catch(error){
+document.getElementById("portfolio-status").textContent="Could not save portfolio in this browser. Check browser storage settings.";
+}
+}
+function money(value){
+return Number(value||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function renderPortfolio(){
+const rows=document.getElementById("portfolio-rows");
+const empty=document.getElementById("portfolio-empty");
+rows.innerHTML="";
+empty.style.display=portfolioAssets.length?"none":"block";
+let totalValue=0,totalCost=0;
+
+portfolioAssets.forEach((asset,index)=>{
+const current=Number(asset.currentPrice)||0;
+const qty=Number(asset.quantity)||0;
+const buy=Number(asset.buyPrice)||0;
+const value=current*qty;
+const cost=buy*qty;
+const pnl=value-cost;
+totalValue+=value;
+totalCost+=cost;
+const tr=document.createElement("tr");
+const values=[
+asset.symbol,
+qty.toLocaleString("en-US",{maximumFractionDigits:8}),
+money(buy),
+current?money(current):"Loading...",
+current?money(value):"Loading...",
+current?(pnl>=0?"+":"")+money(pnl):"Loading..."
+];
+values.forEach((value,i)=>{
+const td=document.createElement("td");
+td.textContent=value;
+if(i===5&&current)td.className=pnl>=0?"profit-positive":"profit-negative";
+tr.appendChild(td);
+});
+const action=document.createElement("td");
+const remove=document.createElement("button");
+remove.type="button";
+remove.className="remove-asset";
+remove.textContent="Remove";
+remove.addEventListener("click",()=>removePortfolioAsset(index));
+action.appendChild(remove);
+tr.appendChild(action);
+rows.appendChild(tr);
+});
+
+const totalPnl=totalValue-totalCost;
+document.getElementById("portfolio-value").textContent=money(totalValue);
+document.getElementById("portfolio-cost").textContent=money(totalCost);
+const pnlElement=document.getElementById("portfolio-profit");
+pnlElement.textContent=(totalPnl>=0?"+":"")+money(totalPnl);
+pnlElement.className=totalPnl>=0?"profit-positive":"profit-negative";
+}
+
+function removePortfolioAsset(index){
+portfolioAssets.splice(index,1);
+savePortfolio();
+renderPortfolio();
+refreshPortfolioPrices();
+}
+
+document.getElementById("portfolio-form").addEventListener("submit",function(event){
+event.preventDefault();
+const symbol=document.getElementById("asset-symbol").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");
+const quantity=Number(document.getElementById("asset-quantity").value);
+const buyPrice=Number(document.getElementById("asset-buy-price").value);
+const note=document.getElementById("asset-note").value.trim();
+
+if(!symbol||!Number.isFinite(quantity)||quantity<=0||!Number.isFinite(buyPrice)||buyPrice<=0){
+alert("Enter a valid Binance pair, quantity and buy price.");
+return;
+}
+if(portfolioAssets.some(asset=>asset.symbol===symbol)){
+alert("This asset is already in your portfolio. Remove it first if you want to enter it again.");
+return;
+}
+portfolioAssets.push({symbol,quantity,buyPrice,note,currentPrice:0});
+savePortfolio();
+renderPortfolio();
+this.reset();
+refreshPortfolioPrices();
+});
+
+async function refreshPortfolioPrices(){
+if(!portfolioAssets.length){renderPortfolio();return;}
+const status=document.getElementById("portfolio-status");
+status.textContent="Updating portfolio prices from Binance...";
+await Promise.all(portfolioAssets.map(async asset=>{
+try{
+const response=await fetch("https://api.binance.com/api/v3/ticker/price?symbol="+encodeURIComponent(asset.symbol));
+if(!response.ok)throw new Error("Price unavailable");
+const data=await response.json();
+const price=Number(data.price);
+if(!Number.isFinite(price)||price<=0)throw new Error("Invalid price");
+asset.currentPrice=price;
+}catch(error){
+asset.currentPrice=Number(asset.currentPrice)||0;
+}
+}));
+savePortfolio();
+renderPortfolio();
+status.textContent="Prices refreshed from Binance where available. Values are indicative and may change; holdings remain saved in this browser.";
 }
 
 window.addEventListener("load",function(){
 createChart(currentSymbol);
 connectLiveTicker(currentSymbol);
+renderPortfolio();
+refreshPortfolioPrices();
+setInterval(refreshPortfolioPrices,15000);
 });
 </script>
-
 </body>
 </html>
