@@ -62,6 +62,40 @@ background:var(--gold);color:#111;border-color:var(--gold)
 }
 .chart-box{height:520px;width:100%}
 #tradingview_chart{height:100%;width:100%}
+
+/* Live ticker */
+.ticker-grid{
+display:grid;
+grid-template-columns:repeat(4,minmax(0,1fr));
+gap:10px;
+padding:14px;
+border-bottom:1px solid var(--border);
+}
+.ticker-card{
+background:var(--panel2);
+border:1px solid var(--border);
+border-radius:6px;
+padding:13px;
+min-width:0;
+}
+.ticker-card small{
+display:block;
+font-size:11px;
+color:var(--muted);
+margin-bottom:9px;
+}
+.ticker-card strong{
+display:block;
+font-size:17px;
+overflow-wrap:anywhere;
+}
+.ticker-card .positive{color:var(--green)}
+.ticker-card .negative{color:var(--red)}
+.ticker-status{
+padding:0 14px 12px;
+font-size:11px;
+color:var(--muted);
+}
 .watch-head{padding:17px;border-bottom:1px solid var(--border);font-weight:bold}
 .search-wrap{padding:12px}
 .search-wrap input{
@@ -93,6 +127,9 @@ footer{border-top:1px solid var(--border);padding:22px;text-align:center;color:v
 .nav{display:none}
 .chart-box{height:430px}
 }
+@media(max-width:600px){
+.ticker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 @media(max-width:480px){
 header{padding:0 13px}
 .container{padding:12px}
@@ -100,6 +137,7 @@ header{padding:0 13px}
 .chart-box{height:380px}
 .feature-grid{grid-template-columns:1fr}
 .market-widget{min-height:460px}
+.ticker-card strong{font-size:15px}
 }
 </style>
 </head>
@@ -120,6 +158,7 @@ header{padding:0 13px}
 </header>
 
 <main class="container">
+
 <section class="welcome">
 <div>
 <h1>Market Overview</h1>
@@ -181,6 +220,7 @@ header{padding:0 13px}
 </section>
 
 <section class="workspace" id="chart">
+
 <div class="chart-panel">
 <div class="chart-head">
 <div class="symbol" id="selected-symbol">
@@ -196,6 +236,27 @@ BTCUSDT <span>Bitcoin / USDT</span>
 <button onclick="setTimeframe('W')">1W</button>
 </div>
 </div>
+
+<!-- Live price information -->
+<div class="ticker-grid">
+<div class="ticker-card">
+<small>Live Price</small>
+<strong id="live-price">Loading...</strong>
+</div>
+<div class="ticker-card">
+<small>24H Change</small>
+<strong id="live-change">--</strong>
+</div>
+<div class="ticker-card">
+<small>24H High / Low</small>
+<strong id="live-highlow">-- / --</strong>
+</div>
+<div class="ticker-card">
+<small>24H Volume</small>
+<strong id="live-volume">--</strong>
+</div>
+</div>
+<div class="ticker-status" id="ticker-status">Connecting to live market data...</div>
 
 <div class="chart-box">
 <div id="tradingview_chart"></div>
@@ -239,12 +300,13 @@ RSI, MACD, Moving Average and Bollinger Bands.
 <strong>Open chart</strong>
 </div>
 <div class="watch-note">
-Charts and market information are supplied by TradingView. Data availability and delays depend on the market and exchange.
+Charts and market information are supplied by third parties. Data availability and delays depend on the market and exchange.
 </div>
 </aside>
 </section>
 
 <h2 class="section-title" id="tools">Explore MarketDesk</h2>
+
 <section class="feature-grid">
 <div class="feature">
 <div class="icon">📊</div>
@@ -262,6 +324,7 @@ Charts and market information are supplied by TradingView. Data availability and
 <p>Follow financial instruments and explore potential market opportunities.</p>
 </div>
 </section>
+
 </main>
 
 <footer>
@@ -273,10 +336,10 @@ Market data is provided by third parties. Nothing on this website is financial a
 <script>
 let currentSymbol="BINANCE:BTCUSDT";
 let currentTimeframe="240";
+let tickerSocket=null;
 
 function createChart(symbol){
-const chartContainer=document.getElementById("tradingview_chart");
-chartContainer.innerHTML="";
+document.getElementById("tradingview_chart").innerHTML="";
 
 new TradingView.widget({
 autosize:true,
@@ -321,11 +384,107 @@ container_id:"tradingview_chart"
 });
 }
 
+function formatPrice(value){
+return Number(value).toLocaleString("en-US",{
+minimumFractionDigits:2,
+maximumFractionDigits:8
+});
+}
+
+function formatVolume(value){
+return Number(value).toLocaleString("en-US",{
+maximumFractionDigits:2
+});
+}
+
+function connectLiveTicker(symbol){
+
+if(tickerSocket){
+tickerSocket.close();
+tickerSocket=null;
+}
+
+const status=document.getElementById("ticker-status");
+const pair=symbol.split(":");
+
+if(pair.length!==2 || pair[0]!=="BINANCE"){
+document.getElementById("live-price").textContent="Unavailable";
+document.getElementById("live-change").textContent="--";
+document.getElementById("live-highlow").textContent="-- / --";
+document.getElementById("live-volume").textContent="--";
+status.textContent="Live ticker currently supports Binance spot pairs. TradingView chart remains available.";
+return;
+}
+
+const market=pair[1].toLowerCase();
+
+status.textContent="Connecting to Binance live market data...";
+
+const socket=new WebSocket(
+"wss://stream.binance.com:9443/ws/"+market+"@ticker"
+);
+
+tickerSocket=socket;
+
+socket.onopen=function(){
+if(tickerSocket===socket){
+status.textContent="● Live Binance market data connected";
+status.style.color="#16c784";
+}
+};
+
+socket.onmessage=function(event){
+if(tickerSocket!==socket)return;
+
+const data=JSON.parse(event.data);
+
+const price=Number(data.c);
+const change=Number(data.P);
+const high=Number(data.h);
+const low=Number(data.l);
+const volume=Number(data.v);
+
+document.getElementById("live-price").textContent=
+formatPrice(price);
+
+const changeElement=document.getElementById("live-change");
+
+changeElement.textContent=
+(change>=0?"+":"")+change.toFixed(2)+"%";
+
+changeElement.className=change>=0?"positive":"negative";
+
+document.getElementById("live-highlow").textContent=
+formatPrice(high)+" / "+formatPrice(low);
+
+document.getElementById("live-volume").textContent=
+formatVolume(volume);
+};
+
+socket.onerror=function(){
+if(tickerSocket===socket){
+status.textContent="Live connection error. Check your connection.";
+status.style.color="#ea3943";
+}
+};
+
+socket.onclose=function(){
+if(tickerSocket===socket){
+status.textContent="Live connection closed. Reopen the market to reconnect.";
+status.style.color="#8492a6";
+}
+};
+}
+
 function loadSymbol(symbol,name,description){
 currentSymbol=symbol;
+
 document.getElementById("selected-symbol").innerHTML=
 name+" <span>"+description+"</span>";
+
 createChart(symbol);
+connectLiveTicker(symbol);
+
 document.getElementById("chart").scrollIntoView({
 behavior:"smooth"
 });
@@ -357,15 +516,19 @@ createChart(currentSymbol);
 
 function searchSymbol(){
 const value=document.getElementById("symbol-search").value.trim().toUpperCase();
+
 if(!value)return;
 
 const symbol=value.includes(":")?value:"BINANCE:"+value;
+
 loadSymbol(symbol,value,"Selected market");
 }
 
 window.addEventListener("load",function(){
 createChart(currentSymbol);
+connectLiveTicker(currentSymbol);
 });
 </script>
+
 </body>
 </html>
