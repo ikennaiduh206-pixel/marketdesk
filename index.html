@@ -105,7 +105,6 @@ header{padding:0 13px}
 </head>
 
 <body>
-
 <header>
 <div class="logo">Market<span>Desk</span></div>
 <nav class="nav">
@@ -121,7 +120,6 @@ header{padding:0 13px}
 </header>
 
 <main class="container">
-
 <section class="welcome">
 <div>
 <h1>Market Overview</h1>
@@ -134,7 +132,6 @@ header{padding:0 13px}
 <h2>Global Markets</h2>
 <span>Market data by TradingView</span>
 </div>
-
 <div class="market-widget">
 <div class="tradingview-widget-container" style="height:100%;width:100%">
 <div class="tradingview-widget-container__widget"></div>
@@ -184,13 +181,11 @@ header{padding:0 13px}
 </section>
 
 <section class="workspace" id="chart">
-
 <div class="chart-panel">
 <div class="chart-head">
 <div class="symbol" id="selected-symbol">
 BTCUSDT <span>Bitcoin / USDT</span>
 </div>
-
 <div class="chart-tools">
 <button onclick="setTimeframe('1')">1m</button>
 <button onclick="setTimeframe('5')">5m</button>
@@ -214,7 +209,6 @@ RSI, MACD, Moving Average and Bollinger Bands.
 
 <aside class="watch-panel" id="watchlist">
 <div class="watch-head">★ Market Watchlist</div>
-
 <div class="search-wrap">
 <input id="symbol-search" placeholder="Search symbol e.g. ETHUSDT" onkeydown="if(event.key==='Enter')searchSymbol()">
 <button class="search-button" style="width:100%;margin-top:8px" onclick="searchSymbol()">Search Market</button>
@@ -224,32 +218,26 @@ RSI, MACD, Moving Average and Bollinger Bands.
 <div><strong>BTCUSDT</strong><small>Bitcoin</small></div>
 <strong>Open chart</strong>
 </div>
-
 <div class="watch-item" onclick="loadSymbol('BINANCE:ETHUSDT','ETHUSDT','Ethereum / USDT')">
 <div><strong>ETHUSDT</strong><small>Ethereum</small></div>
 <strong>Open chart</strong>
 </div>
-
 <div class="watch-item" onclick="loadSymbol('NASDAQ:AAPL','AAPL','Apple Inc.')">
 <div><strong>AAPL</strong><small>Apple</small></div>
 <strong>Open chart</strong>
 </div>
-
 <div class="watch-item" onclick="loadSymbol('NASDAQ:TSLA','TSLA','Tesla Inc.')">
 <div><strong>TSLA</strong><small>Tesla</small></div>
 <strong>Open chart</strong>
 </div>
-
 <div class="watch-item" onclick="loadSymbol('OANDA:XAUUSD','XAUUSD','Gold / U.S. Dollar')">
 <div><strong>XAUUSD</strong><small>Gold</small></div>
 <strong>Open chart</strong>
 </div>
-
 <div class="watch-item" onclick="loadSymbol('FX:EURUSD','EURUSD','Euro / U.S. Dollar')">
 <div><strong>EURUSD</strong><small>Euro / U.S. Dollar</small></div>
 <strong>Open chart</strong>
 </div>
-
 <div class="watch-note">
 Charts and market information are supplied by TradingView. Data availability and delays depend on the market and exchange.
 </div>
@@ -257,7 +245,6 @@ Charts and market information are supplied by TradingView. Data availability and
 </section>
 
 <h2 class="section-title" id="tools">Explore MarketDesk</h2>
-
 <section class="feature-grid">
 <div class="feature">
 <div class="icon">📊</div>
@@ -275,7 +262,6 @@ Charts and market information are supplied by TradingView. Data availability and
 <p>Follow financial instruments and explore potential market opportunities.</p>
 </div>
 </section>
-
 </main>
 
 <footer>
@@ -289,7 +275,8 @@ let currentSymbol="BINANCE:BTCUSDT";
 let currentTimeframe="240";
 
 function createChart(symbol){
-document.getElementById("tradingview_chart").innerHTML="";
+const chartContainer=document.getElementById("tradingview_chart");
+chartContainer.innerHTML="";
 
 new TradingView.widget({
 autosize:true,
@@ -302,10 +289,26 @@ locale:"en",
 enable_publishing:false,
 allow_symbol_change:true,
 hide_side_toolbar:false,
+hide_top_toolbar:false,
+hide_legend:false,
 withdateranges:true,
 details:true,
 hotlist:false,
 calendar:false,
+
+overrides:{
+"paneProperties.background":"#131820",
+"paneProperties.backgroundType":"solid",
+"paneProperties.vertGridProperties.color":"rgba(255,255,255,0.04)",
+"paneProperties.horzGridProperties.color":"rgba(255,255,255,0.04)",
+"scalesProperties.textColor":"#8492a6",
+"mainSeriesProperties.candleStyle.upColor":"#16c784",
+"mainSeriesProperties.candleStyle.downColor":"#ea3943",
+"mainSeriesProperties.candleStyle.wickUpColor":"#16c784",
+"mainSeriesProperties.candleStyle.wickDownColor":"#ea3943",
+"mainSeriesProperties.candleStyle.borderUpColor":"#16c784",
+"mainSeriesProperties.candleStyle.borderDownColor":"#ea3943"
+},
 
 studies:[
 "STD;RSI",
@@ -320,12 +323,9 @@ container_id:"tradingview_chart"
 
 function loadSymbol(symbol,name,description){
 currentSymbol=symbol;
-
 document.getElementById("selected-symbol").innerHTML=
 name+" <span>"+description+"</span>";
-
 createChart(symbol);
-
 document.getElementById("chart").scrollIntoView({
 behavior:"smooth"
 });
@@ -357,11 +357,9 @@ createChart(currentSymbol);
 
 function searchSymbol(){
 const value=document.getElementById("symbol-search").value.trim().toUpperCase();
-
 if(!value)return;
 
 const symbol=value.includes(":")?value:"BINANCE:"+value;
-
 loadSymbol(symbol,value,"Selected market");
 }
 
@@ -369,6 +367,5 @@ window.addEventListener("load",function(){
 createChart(currentSymbol);
 });
 </script>
-
 </body>
 </html>
