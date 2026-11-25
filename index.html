@@ -8,7 +8,7 @@
 <script src="https://s3.tradingview.com/tv.js"></script>
 
 <style>
-:root{
+:root {
 --bg:#0b0e11;
 --panel:#131820;
 --panel2:#171e27;
@@ -23,36 +23,39 @@
 body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 button,input{font:inherit}
 header{
-height:68px;padding:0 22px;display:flex;align-items:center;
-justify-content:space-between;border-bottom:1px solid var(--border);
+height:68px;padding:0 22px;display:flex;
+align-items:center;justify-content:space-between;
+border-bottom:1px solid var(--border);
 background:#10151c;position:sticky;top:0;z-index:10
 }
-.logo{font-size:23px;font-weight:800;letter-spacing:-1px}
+.logo{font-size:23px;font-weight:800}
 .logo span{color:var(--gold)}
-.nav{display:flex;gap:24px;align-items:center}
+.nav{display:flex;gap:24px}
 .nav a{color:var(--muted);text-decoration:none;font-size:13px}
-.nav a:hover{color:white}
 .header-right{display:flex;align-items:center;gap:12px}
 .status{font-size:11px;color:var(--green)}
 .login{background:var(--gold);color:#111;border:0;padding:10px 16px;border-radius:5px;font-weight:bold;cursor:pointer}
 .container{max-width:1500px;margin:auto;padding:20px}
-.welcome{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.welcome{display:flex;justify-content:space-between;margin-bottom:20px}
 .welcome h1{font-size:25px}
 .welcome p{font-size:13px;color:var(--muted);margin-top:7px}
-.market-section{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:15px;margin-bottom:18px}
-.market-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.market-section,.chart-panel,.watch-panel,.feature{
+background:var(--panel);border:1px solid var(--border);border-radius:8px;
+}
+.market-section{padding:15px;margin-bottom:18px}
+.market-section-head{display:flex;justify-content:space-between;margin-bottom:12px}
 .market-section-head h2{font-size:16px}
 .market-section-head span{font-size:11px;color:var(--muted)}
-.market-widget{width:100%;min-height:420px;overflow:hidden}
+.market-widget{width:100%;min-height:420px}
 .workspace{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:14px}
-.chart-panel,.watch-panel{background:var(--panel);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.chart-panel,.watch-panel{overflow:hidden}
 .chart-head{padding:14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .symbol{font-size:17px;font-weight:bold}
 .symbol span{color:var(--muted);font-size:12px;font-weight:normal}
-.chart-tools{display:flex;gap:6px;flex-wrap:wrap}
+.chart-tools{display:flex;gap:5px;flex-wrap:wrap}
 .chart-tools button,.search-button{
 border:1px solid var(--border);background:var(--panel2);
-color:var(--text);padding:8px 11px;border-radius:4px;cursor:pointer;font-size:12px
+color:var(--text);padding:8px 10px;border-radius:4px;cursor:pointer;font-size:12px
 }
 .chart-tools button.active,.chart-tools button:hover{
 background:var(--gold);color:#111;border-color:var(--gold)
@@ -63,7 +66,7 @@ background:var(--gold);color:#111;border-color:var(--gold)
 .search-wrap{padding:12px}
 .search-wrap input{
 width:100%;padding:11px;background:var(--bg);
-border:1px solid var(--border);border-radius:5px;color:white;outline:none
+border:1px solid var(--border);border-radius:5px;color:white
 }
 .watch-item{
 display:flex;justify-content:space-between;align-items:center;
@@ -72,12 +75,10 @@ padding:13px 15px;border-bottom:1px solid var(--border);cursor:pointer
 .watch-item:hover{background:var(--panel2)}
 .watch-item strong{font-size:13px}
 .watch-item small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
-.watch-item .price{text-align:right;font-size:13px}
-.watch-item .change{font-size:11px;margin-top:4px}
 .watch-note{padding:13px;color:var(--muted);font-size:11px;line-height:1.6}
 .section-title{margin:27px 0 13px;font-size:17px}
 .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.feature{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:19px}
+.feature{padding:19px}
 .feature .icon{font-size:23px;margin-bottom:12px}
 .feature h3{font-size:14px;margin-bottom:8px}
 .feature p{font-size:12px;line-height:1.6;color:var(--muted)}
@@ -86,10 +87,7 @@ margin-top:12px;padding:12px;background:var(--panel2);
 border:1px solid var(--border);border-radius:6px;
 font-size:11px;color:var(--muted);line-height:1.6
 }
-footer{
-border-top:1px solid var(--border);padding:22px;text-align:center;
-color:var(--muted);font-size:11px;margin-top:35px
-}
+footer{border-top:1px solid var(--border);padding:22px;text-align:center;color:var(--muted);font-size:11px;margin-top:35px}
 @media(max-width:850px){
 .workspace{grid-template-columns:1fr}
 .nav{display:none}
@@ -151,48 +149,34 @@ header{padding:0 13px}
 "width":"100%",
 "height":"420",
 "tabs":[
-{
-"title":"Crypto",
-"symbols":[
+{"title":"Crypto","symbols":[
 {"s":"BINANCE:BTCUSDT","d":"Bitcoin"},
 {"s":"BINANCE:ETHUSDT","d":"Ethereum"},
 {"s":"BINANCE:BNBUSDT","d":"BNB"},
 {"s":"BINANCE:SOLUSDT","d":"Solana"}
-]
-},
-{
-"title":"Indices",
-"symbols":[
+]},
+{"title":"Indices","symbols":[
 {"s":"FOREXCOM:SPXUSD","d":"S&P 500"},
 {"s":"NASDAQ:NDX","d":"Nasdaq 100"},
 {"s":"INDEX:DJI","d":"Dow Jones"}
-]
-},
-{
-"title":"Forex",
-"symbols":[
+]},
+{"title":"Forex","symbols":[
 {"s":"FX:EURUSD","d":"EUR/USD"},
 {"s":"FX:GBPUSD","d":"GBP/USD"},
 {"s":"FX:USDJPY","d":"USD/JPY"}
-]
-},
-{
-"title":"Commodities",
-"symbols":[
+]},
+{"title":"Commodities","symbols":[
 {"s":"OANDA:XAUUSD","d":"Gold"},
 {"s":"OANDA:XAGUSD","d":"Silver"},
 {"s":"NYMEX:CL1!","d":"Crude Oil"}
-]
-}
+]}
 ],
 "support_host":"https://www.tradingview.com",
 "backgroundColor":"#131820",
 "gridLineColor":"rgba(255,255,255,0.05)",
 "fontColor":"#d1d4dc",
-"underLineColor":"rgba(240,185,11,0.15)",
 "trendLineColor":"#f0b90b",
-"scaleFontColor":"#8492a6",
-"scaleLineColor":"rgba(255,255,255,0.1)"
+"scaleFontColor":"#8492a6"
 }
 </script>
 </div>
@@ -208,6 +192,8 @@ BTCUSDT <span>Bitcoin / USDT</span>
 </div>
 
 <div class="chart-tools">
+<button onclick="setTimeframe('1')">1m</button>
+<button onclick="setTimeframe('5')">5m</button>
 <button onclick="setTimeframe('15')">15m</button>
 <button onclick="setTimeframe('60')">1H</button>
 <button class="active" onclick="setTimeframe('240')">4H</button>
@@ -221,12 +207,12 @@ BTCUSDT <span>Bitcoin / USDT</span>
 </div>
 
 <div class="indicator-note">
-<strong>Technical indicators:</strong> RSI, MACD, Moving Average and Bollinger Bands are requested for the chart. Availability depends on the embedded chart's supported study IDs.
+<strong>Technical indicators:</strong>
+RSI, MACD, Moving Average and Bollinger Bands.
 </div>
 </div>
 
 <aside class="watch-panel" id="watchlist">
-
 <div class="watch-head">★ Market Watchlist</div>
 
 <div class="search-wrap">
@@ -236,38 +222,37 @@ BTCUSDT <span>Bitcoin / USDT</span>
 
 <div class="watch-item" onclick="loadSymbol('BINANCE:BTCUSDT','BTCUSDT','Bitcoin / USDT')">
 <div><strong>BTCUSDT</strong><small>Bitcoin</small></div>
-<div class="price"><strong>Open chart</strong><div class="change up">↗</div></div>
+<strong>Open chart</strong>
 </div>
 
 <div class="watch-item" onclick="loadSymbol('BINANCE:ETHUSDT','ETHUSDT','Ethereum / USDT')">
 <div><strong>ETHUSDT</strong><small>Ethereum</small></div>
-<div class="price"><strong>Open chart</strong><div class="change up">↗</div></div>
+<strong>Open chart</strong>
 </div>
 
 <div class="watch-item" onclick="loadSymbol('NASDAQ:AAPL','AAPL','Apple Inc.')">
 <div><strong>AAPL</strong><small>Apple</small></div>
-<div class="price"><strong>Open chart</strong><div class="change">↗</div></div>
+<strong>Open chart</strong>
 </div>
 
 <div class="watch-item" onclick="loadSymbol('NASDAQ:TSLA','TSLA','Tesla Inc.')">
 <div><strong>TSLA</strong><small>Tesla</small></div>
-<div class="price"><strong>Open chart</strong><div class="change">↗</div></div>
+<strong>Open chart</strong>
 </div>
 
 <div class="watch-item" onclick="loadSymbol('OANDA:XAUUSD','XAUUSD','Gold / U.S. Dollar')">
 <div><strong>XAUUSD</strong><small>Gold</small></div>
-<div class="price"><strong>Open chart</strong><div class="change">↗</div></div>
+<strong>Open chart</strong>
 </div>
 
 <div class="watch-item" onclick="loadSymbol('FX:EURUSD','EURUSD','Euro / U.S. Dollar')">
 <div><strong>EURUSD</strong><small>Euro / U.S. Dollar</small></div>
-<div class="price"><strong>Open chart</strong><div class="change">↗</div></div>
+<strong>Open chart</strong>
 </div>
 
 <div class="watch-note">
 Charts and market information are supplied by TradingView. Data availability and delays depend on the market and exchange.
 </div>
-
 </aside>
 </section>
 
@@ -279,13 +264,11 @@ Charts and market information are supplied by TradingView. Data availability and
 <h3>Advanced Charts</h3>
 <p>Study price movements using interactive charts and multiple timeframes.</p>
 </div>
-
 <div class="feature">
 <div class="icon">⭐</div>
 <h3>Market Watchlist</h3>
 <p>Quickly switch between cryptocurrencies, stocks and currency pairs.</p>
 </div>
-
 <div class="feature">
 <div class="icon">🔎</div>
 <h3>Market Research</h3>
@@ -306,7 +289,6 @@ let currentSymbol="BINANCE:BTCUSDT";
 let currentTimeframe="240";
 
 function createChart(symbol){
-
 document.getElementById("tradingview_chart").innerHTML="";
 
 new TradingView.widget({
@@ -334,7 +316,6 @@ studies:[
 
 container_id:"tradingview_chart"
 });
-
 }
 
 function loadSymbol(symbol,name,description){
@@ -351,13 +332,14 @@ behavior:"smooth"
 }
 
 function setTimeframe(timeframe){
-
 currentTimeframe=timeframe;
 
 document.querySelectorAll(".chart-tools button").forEach(button=>{
 button.classList.remove("active");
 
 const labels={
+"1":"1m",
+"5":"5m",
 "15":"15m",
 "60":"1H",
 "240":"4H",
@@ -374,7 +356,6 @@ createChart(currentSymbol);
 }
 
 function searchSymbol(){
-
 const value=document.getElementById("symbol-search").value.trim().toUpperCase();
 
 if(!value)return;
